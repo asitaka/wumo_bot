@@ -1,0 +1,7 @@
+.env
+bot.log
+users_data.json
+venv/
+__pycache__/
+*.pyc
+.idea/
