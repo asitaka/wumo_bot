@@ -1,5 +1,7 @@
 # Wumo Telegram Bot
 
+[Русская версия](README.ru.md)
+
 A small Telegram bot that fetches the daily [Wumo](https://wumo.com/) comic and can send it to subscribers on a schedule. It also serves any comic by date on request.
 
 ## Features
