@@ -58,7 +58,7 @@ DATA_FILE = "users_data.json"
 # Определяем клавиатуру
 keyboard = [
     ["Bot Status", "Subscribe/Unsubscribe"],
-    ["Get Today's Comic", "Поделиться"]
+    ["Get Today's Comic", "Share"]
 ]
 reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=False)
 
@@ -225,7 +225,7 @@ async def send_images(context, chat_id, img_urls):
             sent += 1
         except Exception as e:
             logger.error(f"❌ Ошибка отправки фото: {e}", exc_info=True)
-            await context.bot.send_message(chat_id=chat_id, text=f"❌ Ошибка загрузки изображения: {img_url}")
+            await context.bot.send_message(chat_id=chat_id, text=f"❌ Failed to load image: {img_url}")
     return sent
 
 
@@ -440,7 +440,7 @@ async def share_command(update: Update, context):
     """Даёт реферальную ссылку и кнопку отправки в Telegram"""
     bot_username = context.bot.username
     if not bot_username:
-        await update.message.reply_text("❌ Не удалось получить ссылку на бота.", reply_markup=reply_markup)
+        await update.message.reply_text("❌ Couldn't get the bot link.", reply_markup=reply_markup)
         return
 
     link = f"https://t.me/{bot_username}?start=ref_{update.effective_user.id}"
@@ -448,14 +448,14 @@ async def share_command(update: Update, context):
         "https://t.me/share/url?url="
         + quote(link, safe='')
         + "&text="
-        + quote("Ежедневный комикс Wumo — подпишись 👇", safe='')
+        + quote("Your daily Wumo comic — subscribe 👇", safe='')
     )
     share_keyboard = InlineKeyboardMarkup([[
-        InlineKeyboardButton("Отправить другу", url=share_url)
+        InlineKeyboardButton("Send to a friend", url=share_url)
     ]])
     await update.message.reply_text(
-        f"🔗 Твоя ссылка:\n{link}\n\n"
-        "Когда друг нажмёт /start по ней, он попадёт к тебе в приглашённые.",
+        f"🔗 Your link:\n{link}\n\n"
+        "When a friend taps /start via this link, they'll be counted as your referral.",
         reply_markup=share_keyboard
     )
 
@@ -511,7 +511,7 @@ def main():
     application.add_handler(MessageHandler(filters.Text("Bot Status"), check_status))
     application.add_handler(MessageHandler(filters.Text("Subscribe/Unsubscribe"), toggle_subscription))
     application.add_handler(MessageHandler(filters.Text("Get Today's Comic"), send_todays_comic))
-    application.add_handler(MessageHandler(filters.Text("Поделиться"), share_command))
+    application.add_handler(MessageHandler(filters.Text("Share"), share_command))
 
     # 🆕 ОБРАБОТЧИК ДАТ (Важно: ДО unknown_command, но ПОСЛЕ кнопок)
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_date_message))
